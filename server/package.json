@@ -1,5 +1,6 @@
 {
-  "name": "Dijkstra-Algoorithm-MERN-Backend",
+  "name": "dijkstra-algorithm-visualizer"
+,
   "version": "1.0.0",
   "description": "A simple MERN backend",
   "main": "index.js",
