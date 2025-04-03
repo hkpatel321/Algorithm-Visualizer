@@ -1,4 +1,11 @@
 {
+  "name": "Dijkstra-Algoorithm-MERN-Backend",
+  "version": "1.0.0",
+  "description": "A simple MERN backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "bcrypt": "^5.1.1",
@@ -9,5 +16,10 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0"
-  }
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "author": "Het Patel",
+  "license": "MIT"
 }
