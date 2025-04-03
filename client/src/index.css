@@ -1,0 +1,51 @@
+@import "tailwindcss";
+/* body{
+    background-image: url('./technology-background_23-2148119855.avif');
+    background-size: cover;
+  } */
+
+.chat-message {
+  line-height: 1.5;
+}
+
+.chat-message strong {
+  font-weight: 600;
+}
+
+.chat-message h1, .chat-message h2, .chat-message h3 {
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.chat-message ul, .chat-message ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.chat-message li {
+  margin: 0.5rem 0;
+}
+
+.chat-message p {
+  margin: 1rem 0;
+}
+
+.chat-message ul li {
+  list-style-type: disc;
+}
+
+.chat-message ol li {
+  list-style-type: decimal;
+}
+
+.chat-message pre {
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.chat-message code {
+  font-family: inherit;
+  white-space: pre;
+}
