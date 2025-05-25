@@ -11,6 +11,7 @@ import Layout from './components/Layout/Layout.jsx';
 import { AuthProvider } from './context/AuthContext';
 import Footer from './components/Footer/Footer';
 import App from './App.jsx';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/chat-history" element={<ChatHistory />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </Layout>
         <Footer />

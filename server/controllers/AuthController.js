@@ -1,6 +1,8 @@
 const User = require("../models/User.js");
 const { createSecretToken } = require("../utils/SecretToken.js");
 const bcrypt = require("bcrypt");
+const Grid = require('../models/Grid');
+const ChatMessage = require('../models/ChatMessage');
 
 module.exports.Signup = async (req, res, next) => {
   try {
@@ -85,5 +87,30 @@ module.exports.Login = async (req, res) => {
       message: "Internal server error", 
       success: false 
     });
+  }
+};
+
+module.exports.getDashboardData = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch user data
+    const user = await User.findById(userId, 'username email');
+
+    // Fetch grids
+    const grids = await Grid.find({ userId }).sort({ createdAt: -1 });
+
+    // Fetch chat messages
+    const chatMessages = await ChatMessage.find({ userId }).sort({ timestamp: -1 });
+
+    res.status(200).json({
+      success: true,
+      user,
+      grids,
+      chatMessages
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

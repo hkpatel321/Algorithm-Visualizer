@@ -51,6 +51,11 @@ function Navbar() {
                   className="text-gray-300 hover:bg-purple-800/40 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
                   Visualize
                 </button>
+                <button 
+                  onClick={() => navigate('/dashboard')}
+                  className="text-gray-300 hover:bg-purple-800/40 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
+                  Dashboard
+                </button>
                
               </div>
             </div>
@@ -137,6 +142,11 @@ function Navbar() {
               onClick={() => navigate('/chat')}
               className="text-gray-300 hover:bg-purple-800/40 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">
               Chat
+            </button>
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="text-gray-300 hover:bg-purple-800/40 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">
+              Dashboard
             </button>
             {isAuthenticated ? (
               <>
