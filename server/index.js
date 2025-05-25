@@ -18,6 +18,7 @@ const { Signup,Login } = require("./controllers/AuthController.js");
 const {ChatController}=require("./controllers/ChatController.js");
 const { userVerification } = require("./middlewares/AuthMiddleware.js");
 const chatRoutes = require('./routes/chatRoutes'); 
+const gridRoutes = require('./routes/gridRoutes');
 
 app.use(cors({
   origin: 'http://localhost:5173', 
@@ -59,6 +60,7 @@ app.get('/api/check-auth', userVerification, (req, res) => {
 });
 
 app.use('/api/chat', chatRoutes); 
+app.use('/api/grid', gridRoutes);
 
 app.listen(port,()=>{ 
     console.log(`Server is running on port ${port}`);

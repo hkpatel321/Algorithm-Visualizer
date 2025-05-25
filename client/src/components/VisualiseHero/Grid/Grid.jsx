@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { dijkstra, getNodesInShortestPathOrder, animateDijkstra } from '../../../utils/Dijkstra';
 import bfs from '../../../utils/BFS';
 import dfs from '../../../utils/DFS';
+import axios from 'axios';
+import { BaseUrl } from '../../../utils/BaseUrl';
 
 function Grid({ gridSize, algorithm }) {
   const [grid, setGrid] = useState([]);
@@ -152,6 +154,45 @@ function Grid({ gridSize, algorithm }) {
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder, animationSpeed);
   };
 
+  const saveGrid = async () => {
+    try {
+      const response = await axios.post(`${BaseUrl}/api/grid/save`, {
+        gridData: grid,
+        startNode,
+        endNode
+      }, { withCredentials: true });
+
+      if (response.data.success) {
+        alert('Grid saved successfully!');
+      }
+    } catch (error) {
+      console.error('Error saving grid:', error);
+      alert('Failed to save grid.');
+    }
+  };
+
+  const loadGrids = async () => {
+    try {
+      const response = await axios.get(`${BaseUrl}/api/grid/load`, { withCredentials: true });
+
+      if (response.data.success) {
+        const grids = response.data.grids;
+        if (grids.length > 0) {
+          const latestGrid = grids[0];
+          setGrid(latestGrid.gridData);
+          setStartNode(latestGrid.startNode);
+          setEndNode(latestGrid.endNode);
+          alert('Grid loaded successfully!');
+        } else {
+          alert('No saved grids found.');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading grids:', error);
+      alert('Failed to load grids.');
+    }
+  };
+
   return (    <div className="grid-container max-w-max mx-auto">
       <div className="flex flex-col items-center gap-4 mb-4">
         <div className="flex justify-center gap-4">
@@ -178,6 +219,21 @@ function Grid({ gridSize, algorithm }) {
           </button>
         </div>
         
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={saveGrid}
+            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Save Grid
+          </button>
+          <button
+            onClick={loadGrids}
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Load Grid
+          </button>
+        </div>
+
         <div className="flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-lg">
           <span className="text-gray-300 text-sm">Slow</span>
           <input
