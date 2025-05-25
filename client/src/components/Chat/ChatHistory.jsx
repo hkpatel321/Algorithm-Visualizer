@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+import {BaseUrl} from '../../utils/BaseUrl.js';
 function ChatHistory() {
   const [chatHistory, setChatHistory] = useState([]);
   const { isAuthenticated } = useAuth();
@@ -10,7 +10,7 @@ function ChatHistory() {
 
   const fetchChatHistory = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/chat/getMessages', 
+      const response = await axios.get(`${BaseUrl}/api/chat/getMessages`, 
         { withCredentials: true }
       );
       if (response.data.success) {
@@ -33,7 +33,7 @@ function ChatHistory() {
     try {
       console.log('Deleting message:', messageId);
       const response = await axios.delete(
-        `http://localhost:5000/api/chat/deleteMessage/${messageId}`,
+        `${BaseUrl}/api/chat/deleteMessage/${messageId}`,
         { withCredentials: true }
       );
       console.log('Delete response:', response.data);
@@ -49,11 +49,11 @@ function ChatHistory() {
     if (window.confirm('Are you sure you want to delete all messages? This cannot be undone.')) {
       try {
         const response = await axios.delete(
-          'http://localhost:5000/api/chat/deleteAllMessages',
+          `${BaseUrl}/api/chat/deleteAllMessages`,
           { withCredentials: true }
         );
         if (response.data.success) {
-          fetchChatHistory(); // Refresh the chat history
+          fetchChatHistory(); 
         }
       } catch (error) {
         console.error('Error deleting all messages:', error);
@@ -82,7 +82,7 @@ function ChatHistory() {
         <div className="space-y-4">
           {chatHistory.map((message) => (
             <div
-              key={message._id}  // Use message._id as key instead of index
+              key={message._id}  
               className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} group`}
             >
               <div

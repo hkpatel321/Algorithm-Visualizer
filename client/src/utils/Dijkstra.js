@@ -28,6 +28,50 @@ const dijkstra = (grid, startNode, endNode) => {
     return visitedNodesInOrder;
 };
 
+const bfs = (grid, startNode, endNode) => {
+    const visitedNodesInOrder = [];
+    const queue = [startNode];
+    startNode.isVisited = true;
+
+    while (queue.length) {
+        const currentNode = queue.shift();
+        visitedNodesInOrder.push(currentNode);
+
+        if (currentNode === endNode) return visitedNodesInOrder;
+
+        const neighbors = getUnvisitedNeighbors(currentNode, grid);
+        for (const neighbor of neighbors) {
+            neighbor.isVisited = true;
+            neighbor.previousNode = currentNode;
+            queue.push(neighbor);
+        }
+    }
+    return visitedNodesInOrder;
+};
+
+const dfs = (grid, startNode, endNode) => {
+    const visitedNodesInOrder = [];
+    const stack = [startNode];
+    startNode.isVisited = true;
+
+    while (stack.length) {
+        const currentNode = stack.pop();
+        visitedNodesInOrder.push(currentNode);
+
+        if (currentNode === endNode) return visitedNodesInOrder;
+
+        const neighbors = getUnvisitedNeighbors(currentNode, grid);
+        for (const neighbor of neighbors) {
+            if (!neighbor.isVisited) {
+                neighbor.isVisited = true;
+                neighbor.previousNode = currentNode;
+                stack.push(neighbor);
+            }
+        }
+    }
+    return visitedNodesInOrder;
+};
+
 const getAllNodes = (grid) => {
     const nodes = [];
     for (const row of grid) {
@@ -112,4 +156,4 @@ const animateShortestPath = (nodesInShortestPathOrder, speed = 50) => {
     }
 };
 
-export { dijkstra, getNodesInShortestPathOrder, animateDijkstra };
+export { dijkstra, bfs, dfs, getNodesInShortestPathOrder, animateDijkstra };

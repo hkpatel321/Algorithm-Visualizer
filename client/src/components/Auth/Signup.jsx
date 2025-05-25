@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
-
+import {BaseUrl} from '../../utils/BaseUrl.js';
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -15,7 +15,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/signup', 
+      const response = await axios.post(`${BaseUrl}/signup`, 
         formData,
         { withCredentials: true } // Add this line
       );

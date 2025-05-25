@@ -1,8 +1,195 @@
 @import "tailwindcss";
-/* body{
+
+/* Theme transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme (default) */
+:root {
+  color-scheme: dark;
+}
+
+/* Auth form styles for both themes */
+.auth-form {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background-color: rgba(17, 24, 39, 0.7);
+}
+
+/* Light theme */
+:root.light {
+  color-scheme: light;
+}
+
+/* Light theme specific styles */
+:root.light .bg-gray-900\/60,
+:root.light .bg-gray-900\/30 {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-color: rgba(219, 234, 254, 0.4);
+}
+
+:root.light .from-purple-900.via-gray-900.to-black {
+  background: linear-gradient(to bottom right, #e0f2fe, #f0f9ff, #ffffff);
+}
+
+:root.light .bg-\[radial-gradient\(circle_800px_at_50\%_50\%\,\#3b1d6c\,transparent\)\] {
+  background: radial-gradient(circle 800px at 50% 50%, rgba(59, 29, 108, 0.1), transparent);
+}
+
+/* Text colors */
+:root.light .text-gray-300,
+:root.light .text-white {
+  color: #1f2937;
+}
+
+/* Button and interactive elements */
+:root.light .from-purple-400.to-pink-400 {
+  background: linear-gradient(to right, #6366f1, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+:root.light .border-purple-900\/40 {
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+:root.light .hover\:bg-purple-800\/40:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+:root.light .bg-purple-500 {
+  background-color: #6366f1;
+}
+
+:root.light .hover\:bg-purple-600:hover {
+  background-color: #4f46e5;
+}
+
+/* Chat specific styles */
+:root.light .chat-message {
+  color: #1f2937;
+}
+
+:root.light .chat-message pre {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+:root.light .chat-message code {
+  color: #1f2937;
+}
+
+/* Chat component light theme styles */
+:root.light .chat-message {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: #1f2937;
+}
+
+:root.light .chat-message pre {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+:root.light .chat-message code {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Login/Signup form light theme styles */
+:root.light .auth-form {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+:root.light .auth-form input {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  color: #1f2937;
+}
+
+:root.light .auth-form input:focus {
+  border-color: #6366f1;
+  --ring-color: rgba(99, 102, 241, 0.2);
+}
+
+:root.light .auth-form label {
+  color: #4b5563;
+}
+
+:root.light .auth-form button {
+  background-color: #6366f1;
+  color: white;
+}
+
+:root.light .auth-form button:hover {
+  background-color: #4f46e5;
+}
+
+/* Grid specific styles */
+:root.light .grid-node {
+  border-color: rgba(99, 102, 241, 0.3);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+:root.light .grid-node.start-node {
+  background-color: #22c55e !important;
+}
+
+:root.light .grid-node.end-node {
+  background-color: #ef4444 !important;
+}
+
+:root.light .grid-node.visited {
+  background-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+:root.light .grid-node.shortest-path {
+  background-color: #fbbf24 !important;
+}
+
+:root.light .grid-node:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+/* Grid and Choose component container styles for both themes */
+.grid-container {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background-color: rgba(17, 24, 39, 0.7);
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+:root.light .grid-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Material UI components in light mode */
+:root.light .MuiInputBase-root {
+  color: #1f2937 !important;
+}
+
+:root.light .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+:root.light .MuiInputLabel-root {
+  color: #4b5563 !important;
+}
+
+:root.light .MuiMenuItem-root {
+  color: #1f2937 !important;
+}
+
+body{
     background-image: url('./technology-background_23-2148119855.avif');
     background-size: cover;
-  } */
+  }
 
 .chat-message {
   line-height: 1.5;
@@ -48,4 +235,17 @@
 .chat-message code {
   font-family: inherit;
   white-space: pre;
+}
+
+/* Chat container styles for both themes */
+.chat-container {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background-color: rgba(17, 24, 39, 0.7);
+}
+
+/* Light theme */
+:root.light .chat-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.2);
 }

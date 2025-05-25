@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+import {BaseUrl} from '../../utils/BaseUrl.js';
 function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -19,7 +19,7 @@ function Chat() {
 
     const fetchMessages = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/chat/getMessages', { withCredentials: true });
+        const response = await axios.get(`${BaseUrl}/api/chat/getMessages`, { withCredentials: true });
         if (response.data.success) {
           setMessages(response.data.messages);
         }
@@ -50,7 +50,7 @@ function Chat() {
 
     try {
       console.log('Saving message:', { userId: user.id, message: input, sender: 'user' });
-      const response = await axios.post('http://localhost:5000/api/chat/saveMessage', 
+      const response = await axios.post(`${BaseUrl}/api/chat/saveMessage`, 
         { message: input, sender: 'user' }, 
         { withCredentials: true }
       );
@@ -59,7 +59,7 @@ function Chat() {
         throw new Error('Failed to save message');
       }
 
-      const botResponse = await axios.post('http://localhost:5000/api/chat/generateResponse', 
+      const botResponse = await axios.post(`${BaseUrl}/api/chat/generateResponse`, 
         { message: input }, 
         { withCredentials: true }
       );
@@ -68,7 +68,7 @@ function Chat() {
       
       setMessages(prev => [...prev, botMessage]);
 
-      await axios.post('http://localhost:5000/api/chat/saveMessage', 
+      await axios.post(`${BaseUrl}/api/chat/saveMessage`, 
         { message: botMessage.text, sender: 'bot' }, 
         { withCredentials: true }
       );
@@ -83,9 +83,8 @@ function Chat() {
     setIsLoading(false);
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 p-8">
-      <div className="max-w-5xl mx-auto bg-gray-800/50 backdrop-blur-md rounded-xl shadow-2xl flex flex-col h-[80vh]">
+  return (    <div className="min-h-screen p-8">
+      <div className="max-w-5xl mx-auto chat-container rounded-xl shadow-2xl flex flex-col h-[80vh]">
         <div className="p-4 border-b border-purple-900/40 flex justify-between items-center">
           <h3 className="text-xl font-semibold text-white">Algorithm Assistant</h3>
           <button

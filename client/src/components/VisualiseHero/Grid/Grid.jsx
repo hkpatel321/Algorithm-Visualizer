@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { dijkstra, getNodesInShortestPathOrder, animateDijkstra } from '../../../utils/Dijkstra';
+import bfs from '../../../utils/BFS';
+import dfs from '../../../utils/DFS';
 
-function Grid({ gridSize }) {
+function Grid({ gridSize, algorithm }) {
   const [grid, setGrid] = useState([]);
   const [startNode, setStartNode] = useState(null);
   const [endNode, setEndNode] = useState(null);
@@ -11,14 +13,12 @@ function Grid({ gridSize }) {
   const resetGrid = () => {
     const nodes = document.getElementsByClassName('grid-node');
     Array.from(nodes).forEach(node => {
-      // Only reset the animation-related styles
       node.style.backgroundColor = '';
       node.style.transition = '';
     });
   };
 
   useEffect(() => {
-    // Reset everything when gridSize changes
     resetGrid();
     setGrid(createGrid(gridSize));
     setStartNode(null);
@@ -40,7 +40,6 @@ function Grid({ gridSize }) {
           isEnd: false,
           weight: Math.floor(Math.random() * 999) + 1,
           previousNode: null,
-          // Add a background class based on size
           bgClass: getBackgroundClass(size)
         });
       }
@@ -68,8 +67,18 @@ function Grid({ gridSize }) {
       node.isEnd = true;
       setEndNode(node);
       setIsSelectingStart(true);
-      alert('Running Dijkstra Algorithm');
-      const visitedNodesInOrder = dijkstra(newGrid, startNode, node);
+      alert('Running Algorithm');
+      let visitedNodesInOrder;
+      switch (algorithm) {
+        case 'bfs':
+          visitedNodesInOrder = bfs(newGrid, startNode, node);
+          break;
+        case 'dfs':
+          visitedNodesInOrder = dfs(newGrid, startNode, node);
+          break;
+        default:
+          visitedNodesInOrder = dijkstra(newGrid, startNode, node);
+      }
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(node);
       console.log(`visitedNodesInOrder: ${visitedNodesInOrder}`);
       console.log(`nodesInShortestPathOrder: ${nodesInShortestPathOrder}`);
@@ -121,8 +130,29 @@ function Grid({ gridSize }) {
     setIsSelectingStart(true);
   };
 
-  return (
-    <div className={`${getBackgroundClass(gridSize)} p-4 rounded-xl shadow-2xl max-w-max mx-auto`}>
+  const visualizeAlgorithm = () => {
+    if (!startNode || !endNode) {
+      alert('Please select both a start and an end node.');
+      return;
+    }
+
+    let visitedNodesInOrder;
+    switch (algorithm) {
+      case 'bfs':
+        visitedNodesInOrder = bfs(grid, startNode, endNode);
+        break;
+      case 'dfs':
+        visitedNodesInOrder = dfs(grid, startNode, endNode);
+        break;
+      default:
+        visitedNodesInOrder = dijkstra(grid, startNode, endNode);
+    }
+
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder, animationSpeed);
+  };
+
+  return (    <div className="grid-container max-w-max mx-auto">
       <div className="flex flex-col items-center gap-4 mb-4">
         <div className="flex justify-center gap-4">
           <button
@@ -194,6 +224,14 @@ function Grid({ gridSize }) {
             ))
           ))}
         </div>
+      </div>
+      <div className="mt-4">
+        <button
+          onClick={visualizeAlgorithm}
+          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+        >
+          Visualize {algorithm.toUpperCase()}
+        </button>
       </div>
     </div>
   );

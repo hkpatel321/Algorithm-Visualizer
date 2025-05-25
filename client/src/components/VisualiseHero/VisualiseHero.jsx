@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Grid from './Grid/Grid';
 import Choose from './Select/Choose';
+import { dijkstra, bfs, dfs } from '../../utils/Dijkstra';
 
 function VisualiseHero() {
   const [showGrid, setShowGrid] = useState(false);
   const [gridSize, setGridSize] = useState(0);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('dijkstra');
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -22,6 +24,7 @@ function VisualiseHero() {
       navigate('/login');
       return;
     }
+    setSelectedAlgorithm(algorithm);
     setGridSize(parseInt(size));
     setShowGrid(true);
   };
@@ -38,7 +41,7 @@ function VisualiseHero() {
         </div>
         {showGrid && gridSize > 0 && (
           <div className="mt-8">
-            <Grid gridSize={gridSize} />
+            <Grid gridSize={gridSize} algorithm={selectedAlgorithm} />
           </div>
         )}
         <div className="text-center py-8">

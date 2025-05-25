@@ -61,30 +61,24 @@ ChatController.generateResponse = async (req, res) => {
           <pre><code class="text-gray-100">${code.trim()}</code></pre>
         </div>`;
       })
-      // Convert ** to proper HTML bold tags
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // Convert numbered lists (e.g., 1., 2.) to proper HTML ordered lists
       .replace(/(\d+\.\s+(.*?)(\n|$))+/g, (match) => {
         const items = match.trim().split('\n').map(item => 
           `<li>${item.replace(/^\d+\.\s+/, '')}</li>`
         ).join('');
         return `<ol>${items}</ol>`;
       })
-      // Convert bullet points to proper HTML unordered lists
       .replace(/(\*\s+(.*?)(\n|$))+/g, (match) => {
         const items = match.trim().split('\n').map(item => 
           `<li>${item.replace(/^\*\s+/, '')}</li>`
         ).join('');
         return `<ul>${items}</ul>`;
       })
-      // Convert headings
       .replace(/^(#+)\s*(.*?)$/gm, (_, hashes, content) => {
         const level = hashes.length;
         return `<h${level}>${content}</h${level}>`;
       })
-      // Add paragraph tags to text blocks
       .replace(/([^\n]+)\n\n/g, '<p>$1</p>')
-      // Add line breaks for single newlines
       .replace(/\n(?!\n)/g, '<br>');
 
     res.status(200).json({ success: true, message: text });
