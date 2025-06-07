@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Grid from './Grid/Grid';
 import Choose from './Select/Choose';
-import { dijkstra, bfs, dfs } from '../../utils/Dijkstra';
 
 function VisualiseHero() {
   const [showGrid, setShowGrid] = useState(false);
   const [gridSize, setGridSize] = useState(0);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('dijkstra');
+  const { theme } = useTheme(); 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -30,14 +31,16 @@ function VisualiseHero() {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className={`min-h-screen relative ${theme === 'light' ? 'bg-gray-100' : 'bg-gray-900'}`}> {/* Theme-aware styling */}
       {/* Main content */}
       <div className="relative z-10 container mx-auto px-4">
         <div className="text-center py-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Welcome to the Dijkstra Algorithm Visualizer</h1>
+          <h1 className={`text-4xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+            Welcome to the Dijkstra Algorithm Visualizer
+          </h1>
         </div>
         <div className="flex justify-center">
-          <Choose onGenerateGrid={handleGenerateGrid} />
+          <Choose onGenerateGrid={handleGenerateGrid} currentTheme={theme} />
         </div>
         {showGrid && gridSize > 0 && (
           <div className="mt-8">
@@ -45,7 +48,7 @@ function VisualiseHero() {
           </div>
         )}
         <div className="text-center py-8">
-          <p className="text-lg text-gray-300">
+          <p className={`text-lg ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
             The algorithm will then find the shortest path between the start and end points, 
             and you can see the process step by step.
           </p>

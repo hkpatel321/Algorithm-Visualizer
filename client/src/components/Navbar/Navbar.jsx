@@ -1,37 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Logout from '../Auth/Logout';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [theme, setTheme] = useState('dark');
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth(); 
-  useEffect(() => {
-    // Store theme preference
-    localStorage.setItem('theme', theme);
-    // Apply theme
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-    }
-  }, [theme]);
-
-  // Initialize theme from localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
-  };
+  const { isAuthenticated, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="bg-gray-900/60 backdrop-blur-md border-b border-purple-900/40">
@@ -67,7 +44,8 @@ function Navbar() {
               onClick={() => navigate('/chat')}
               className="text-gray-300 hover:bg-purple-800/40 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
               Chat
-            </button>            <button
+            </button>
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-purple-800/40 transition-all duration-300"
               title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
