@@ -36,7 +36,7 @@ function VisualiseHero() {
       <div className="relative z-10 container mx-auto px-4">
         <div className="text-center py-8">
           <h1 className={`text-4xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
-            Welcome to the Dijkstra Algorithm Visualizer
+            Welcome to the  Algorithm Visualizer
           </h1>
         </div>
         <div className="flex justify-center">

@@ -1,0 +1,53 @@
+.algo-explanation-panel {
+  margin-top: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.10);
+  padding: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--algo-bg);
+  color: var(--algo-text);
+  transition: max-height 0.3s cubic-bezier(.4,0,.2,1);
+}
+.algo-explanation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.algo-explanation-body {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.algo-step {
+  margin-bottom: 1rem;
+}
+.algo-block {
+  background: var(--algo-block-bg);
+  color: var(--algo-block-text);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--algo-text);
+}
+
+:root {
+  --algo-bg: #f9f9fb;
+  --algo-text: #22223b;
+  --algo-block-bg: #e0e0e0;
+  --algo-block-text: #22223b;
+}
+.dark, [data-theme="dark"] & {
+  --algo-bg: #232136;
+  --algo-text: #f4f4f5;
+  --algo-block-bg: #2a273f;
+  --algo-block-text: #f4f4f5;
+}

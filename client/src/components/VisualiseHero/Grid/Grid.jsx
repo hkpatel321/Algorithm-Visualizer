@@ -4,6 +4,9 @@ import bfs from '../../../utils/BFS';
 import dfs from '../../../utils/DFS';
 import axios from 'axios';
 import { BaseUrl } from '../../../utils/BaseUrl';
+import AlgorithmExplanation from '../AlgorithmExplanation';
+import algoStyles from '../AlgorithmExplanation.module.css';
+import { useTheme } from '../../../context/ThemeContext';
 
 function Grid({ gridSize, algorithm }) {
   const [grid, setGrid] = useState([]);
@@ -11,6 +14,11 @@ function Grid({ gridSize, algorithm }) {
   const [endNode, setEndNode] = useState(null);
   const [isSelectingStart, setIsSelectingStart] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState(50); // Default speed (milliseconds)
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [explanationSteps, setExplanationSteps] = useState([]);
+  const [explanationLoading, setExplanationLoading] = useState(false);
+  const [explanationError, setExplanationError] = useState(null);
+  const { theme } = useTheme();
 
   const resetGrid = () => {
     const nodes = document.getElementsByClassName('grid-node');
@@ -193,102 +201,169 @@ function Grid({ gridSize, algorithm }) {
     }
   };
 
-  return (    <div className="grid-container max-w-max mx-auto">
-      <div className="flex flex-col items-center gap-4 mb-4">
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={clearBoard}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg 
-                     transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Clear Board
-          </button>
-          <button
-            onClick={clearPath}
-            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg 
-                     transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Clear Path
-          </button>
-          <button
-            onClick={deleteGrid}
-            className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg 
-                     transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Delete Grid
-          </button>
-        </div>
-        
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={saveGrid}
-            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Save Grid
-          </button>
-          <button
-            onClick={loadGrids}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Load Grid
-          </button>
-        </div>
+  const handleExplain = (algorithm) => {
+    setShowExplanation(true);
+    setExplanationLoading(true);
+    setExplanationError(null);
+    console.log(algorithm, grid);
+    fetch(`${BaseUrl}/api/grid-explanation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ algorithm, grid }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.steps)) {
+          setExplanationSteps(data.steps);
+        } else {
+          setExplanationError('Failed to generate explanation.');
+        }
+      })
+      .catch(() => setExplanationError('Failed to generate explanation.'))
+      .finally(() => setExplanationLoading(false));
+  };
 
-        <div className="flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-lg">
-          <span className="text-gray-300 text-sm">Slow</span>
-          <input
-            type="range"
-            min="10"
-            max="100"
-            value={100 - animationSpeed}
-            onChange={(e) => setAnimationSpeed(100 - e.target.value)}
-            className="w-32 h-2 bg-purple-500 rounded-lg appearance-none cursor-pointer"
-          />
-          <span className="text-gray-300 text-sm">Fast</span>
-        </div>
+  const handleCloseExplanation = () => {
+    setShowExplanation(false);
+    setExplanationSteps([]);
+  };
+
+  return (
+    <div>
+      {/* User guidance message */}
+      <div className={`mb-4 p-3 rounded-lg text-center font-semibold ${theme === 'light' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' : 'bg-yellow-900 text-yellow-100 border border-yellow-700'}`}
+           style={{maxWidth: 600, margin: '0 auto'}}>
+        Please select a <span className="font-bold">starting node</span> and an <span className="font-bold">ending node</span> on the grid before running the algorithm.
       </div>
-      <div className="overflow-x-auto">
-        <div
-          className="grid gap-1 mx-auto"
-          style={{ 
-            gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-            maxWidth: `${Math.min(gridSize * 60, 1200)}px`
-          }}
-        >
-          {grid.map((row, i) => (
-            row.map((node, j) => (
-              <div
-                key={`${i}-${j}`}
-                id={`node-${i}-${j}`}
-                className={`
-                  grid-node p-3 rounded-lg transition-all duration-300 ease-in-out
-                  text-center text-sm font-medium
-                  ${node.isStart ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' : ''}
-                  ${node.isEnd ? 'bg-gradient-to-r from-red-400 to-red-500 text-white' : ''}
-                  ${!node.isStart && !node.isEnd ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : ''}
-                  transform hover:scale-105 cursor-pointer
-                  shadow-lg hover:shadow-xl
-                `}
-                style={{
-                  backgroundColor: '',
-                  transition: 'all 0.3s ease'
-                }}
-                onClick={() => handleCellClick(i, j)}
+      <div className={`grid-container ${showExplanation ? 'flipped' : ''}`}>
+        <div className="grid-content">
+          <div className="flex flex-col items-center gap-4 mb-4">
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={clearBoard}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg 
+                         transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                {node.weight}
-              </div>
-            ))
-          ))}
+                Clear Board
+              </button>
+              <button
+                onClick={clearPath}
+                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg 
+                         transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Clear Path
+              </button>
+              <button
+                onClick={deleteGrid}
+                className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg 
+                         transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Delete Grid
+              </button>
+            </div>
+            
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={saveGrid}
+                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Save Grid
+              </button>
+              <button
+                onClick={loadGrids}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Load Grid
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-lg">
+              <span className="text-gray-300 text-sm">Slow</span>
+              <input
+                type="range"
+                min="10"
+                max="100"
+                value={100 - animationSpeed}
+                onChange={(e) => setAnimationSpeed(100 - e.target.value)}
+                className="w-32 h-2 bg-purple-500 rounded-lg appearance-none cursor-pointer"
+              />
+              <span className="text-gray-300 text-sm">Fast</span>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <div
+              className="grid gap-1 mx-auto"
+              style={{ 
+                gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+                maxWidth: `${Math.min(gridSize * 60, 1200)}px`
+              }}
+            >
+              {grid.map((row, i) => (
+                row.map((node, j) => (
+                  <div
+                    key={`${i}-${j}`}
+                    id={`node-${i}-${j}`}
+                    className={`
+                      grid-node p-3 rounded-lg transition-all duration-300 ease-in-out
+                      text-center text-sm font-medium
+                      ${node.isStart ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' : ''}
+                      ${node.isEnd ? 'bg-gradient-to-r from-red-400 to-red-500 text-white' : ''}
+                      ${!node.isStart && !node.isEnd ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300' : ''}
+                      transform hover:scale-105 cursor-pointer
+                      shadow-lg hover:shadow-xl
+                    `}
+                    style={{
+                      backgroundColor: '',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onClick={() => handleCellClick(i, j)}
+                  >
+                    {node.weight}
+                  </div>
+                ))
+              ))}
+            </div>
+          </div>
+          <div className="mt-4">
+            <button
+              onClick={visualizeAlgorithm}
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+            >
+              Visualize {algorithm.toUpperCase()}
+            </button>
+          </div>
+          {/* Explanation Buttons - now centered and spaced */}
+          <div className="flex justify-center gap-4 mt-6 mb-2">
+            <button
+              onClick={() => handleExplain('dijkstra')}
+              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Explain Dijkstra
+            </button>
+            <button
+              onClick={() => handleExplain('bfs')}
+              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Explain BFS
+            </button>
+            <button
+              onClick={() => handleExplain('dfs')}
+              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Explain DFS
+            </button>
+          </div>
         </div>
       </div>
-      <div className="mt-4">
-        <button
-          onClick={visualizeAlgorithm}
-          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-        >
-          Visualize {algorithm.toUpperCase()}
-        </button>
-      </div>
+      <AlgorithmExplanation
+        steps={explanationSteps}
+        loading={explanationLoading}
+        error={explanationError}
+        onClose={handleCloseExplanation}
+        show={showExplanation}
+        theme={theme}
+        className={algoStyles['algo-explanation-panel']}
+      />
     </div>
   );
 }

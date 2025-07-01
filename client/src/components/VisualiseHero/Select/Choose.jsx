@@ -37,8 +37,8 @@ export default function Choose({ onGenerateGrid }) {
       return;
     }
     const size = parseInt(gridSize);
-    if (isNaN(size) || size < 5 || size > 50) {
-      setError('Grid size must be between 5 and 50');
+    if (isNaN(size) || size < 2 || size > 25) {
+      setError('Grid size must be between 2 and 25');
       return;
     }
     onGenerateGrid(algorithm, size);
