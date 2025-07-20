@@ -29,6 +29,11 @@ function Navbar() {
                   Visualize
                 </button>
                 <button 
+                  onClick={() => navigate('/map')}
+                  className="text-gray-300 hover:bg-purple-800/40 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
+                  Map
+                </button>
+                <button 
                   onClick={() => navigate('/dashboard')}
                   className="text-gray-300 hover:bg-purple-800/40 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
                   Dashboard

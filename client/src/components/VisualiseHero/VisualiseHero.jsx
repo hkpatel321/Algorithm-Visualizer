@@ -51,11 +51,10 @@ function VisualiseHero() {
         )}
         <button
           className="bg-purple-600 text-white px-4 py-2 rounded-lg mb-4"
-          onClick={() => setShowMap(!showMap)}
+          onClick={() => navigate('/map')}
         >
-          {showMap ? 'Hide Map Path Finder' : 'Find Shortest Path on Map'}
+          Find Shortest Path on Map
         </button>
-        {showMap && <MapPathFinder />}
         <div className="text-center py-8">
           <p className={`text-lg ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
             The algorithm will then find the shortest path between the start and end points, 

@@ -13,6 +13,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Footer from './components/Footer/Footer';
 import App from './App.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import Map from './components/Map/Map.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')).render(
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/map" element={<Map />} />
             </Routes>
           </Layout>
           <Footer />

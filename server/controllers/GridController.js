@@ -4,6 +4,39 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const GridController = {};
 
+// Save map path
+GridController.saveMapPath = async (req, res) => {
+  try {
+    const { startPoint, endPoint, path } = req.body;
+    const userId = req.user.id;
+
+    const mapPath = await Grid.create({
+      userId,
+      gridData: path,
+      startNode: startPoint,
+      endNode: endPoint,
+      type: 'map'
+    });
+
+    res.status(201).json({ success: true, message: 'Map path saved successfully', mapPath });
+  } catch (error) {
+    console.error('Error saving map path:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+// Get user's saved map paths
+GridController.getMapPaths = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const mapPaths = await Grid.find({ userId, type: 'map' }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, mapPaths });
+  } catch (error) {
+    console.error('Error loading map paths:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 GridController.saveGrid = async (req, res) => {
   try {
     const { gridData, startNode, endNode } = req.body;
