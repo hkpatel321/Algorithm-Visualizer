@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import Grid from './Grid/Grid';
 import Choose from './Select/Choose';
+import MapPathFinder from './MapPathFinder.jsx';
 
 function VisualiseHero() {
   const [showGrid, setShowGrid] = useState(false);
@@ -12,6 +13,7 @@ function VisualiseHero() {
   const { theme } = useTheme(); 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -47,6 +49,13 @@ function VisualiseHero() {
             <Grid gridSize={gridSize} algorithm={selectedAlgorithm} />
           </div>
         )}
+        <button
+          className="bg-purple-600 text-white px-4 py-2 rounded-lg mb-4"
+          onClick={() => setShowMap(!showMap)}
+        >
+          {showMap ? 'Hide Map Path Finder' : 'Find Shortest Path on Map'}
+        </button>
+        {showMap && <MapPathFinder />}
         <div className="text-center py-8">
           <p className={`text-lg ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
             The algorithm will then find the shortest path between the start and end points, 
