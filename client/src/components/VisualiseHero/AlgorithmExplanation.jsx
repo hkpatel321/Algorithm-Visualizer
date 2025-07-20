@@ -3,6 +3,15 @@ import PropTypes from 'prop-types';
 import './AlgorithmExplanation.css';
 
 function formatStep(step) {
+  if (typeof step !== 'string') {
+    // Handle object data
+    if (typeof step === 'object') {
+      step = JSON.stringify(step, null, 2);
+    } else {
+      step = String(step);
+    }
+  }
+
   // Convert markdown-like syntax to HTML
   let html = step
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>') // bold
@@ -23,6 +32,21 @@ function formatStep(step) {
 }
 
 const AlgorithmExplanation = ({ steps, loading, error, onClose, show, theme }) => {
+  const [formattedSteps, setFormattedSteps] = useState([]);
+
+  useEffect(() => {
+    // Process steps when they change
+    if (Array.isArray(steps)) {
+      const processed = steps.map(step => {
+        if (typeof step === 'object') {
+          return JSON.stringify(step, null, 2);
+        }
+        return step;
+      });
+      setFormattedSteps(processed);
+    }
+  }, [steps]);
+
   if (!show) return null;
   return (
     <div className={`algo-explanation-panel ${theme}`}> 
@@ -33,8 +57,14 @@ const AlgorithmExplanation = ({ steps, loading, error, onClose, show, theme }) =
       {loading && <div>Generating explanation...</div>}
       {error && <div className="text-red-500">{error}</div>}
       <div className="algo-explanation-body">
-        {steps.map((step, idx) => (
-          <div key={idx} className="algo-step" dangerouslySetInnerHTML={{ __html: formatStep(step) }} />
+        {formattedSteps.map((step, idx) => (
+          <div key={idx} className="algo-step">
+            {typeof step === 'object' ? (
+              <pre className="algo-block">{JSON.stringify(step, null, 2)}</pre>
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: formatStep(step) }} />
+            )}
+          </div>
         ))}
       </div>
     </div>
